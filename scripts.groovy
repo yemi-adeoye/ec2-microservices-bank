@@ -1,6 +1,6 @@
 def buildUsersMicroservice(){
     echo "Building users microservice"
-    sh mvn build
+    sh 'mvn build'
 }
 
 def connectToEc2(){
