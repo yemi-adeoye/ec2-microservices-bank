@@ -13,7 +13,7 @@ pipeline {
         stage("Building microservice") {
             steps {
                 script {
-                    gv.buildbuildUsersMicroserviceImage();
+                    gv.buildUsersMicroservice();
                 }
             }
         }
@@ -21,7 +21,7 @@ pipeline {
         stage("Connecting to Server") {
             steps {
                 script {
-                    gv.pushImage();
+                    gv.connectToEc2();
                 }
             }
         }
@@ -29,7 +29,7 @@ pipeline {
         stage("Copying files to Server") {
             steps {
                 script {
-                    gv.pushImage();
+                    gv.copyJarToEc2();
                 }
             }
         }
@@ -37,7 +37,7 @@ pipeline {
         stage("Running microservice...") {
             steps {
                 script {
-                    gv.pushImage();
+                    gv.runUsersMicroService();
                 }
             }
         }

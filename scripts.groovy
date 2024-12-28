@@ -10,7 +10,7 @@ def copyJarToEc2(){
     echo "Copying Files to EC2"
 }
 
-def runUsersMicroSErvice(){
+def runUsersMicroService(){
     echo "Running users microservice"
 }
 
