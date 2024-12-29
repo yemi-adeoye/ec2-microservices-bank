@@ -6,7 +6,7 @@ def buildUsersMicroservice() {
 
 def connectToEc2() {
     echo 'Connecting to EC2'
-    sh 'ssh -i "/var/jenkins_home/workspace/kp-my-server.pem" ec2-user@ec2-44-222-201-100.compute-1.amazonaws.com'
+    sh 'ssh -T "/var/jenkins_home/workspace/kp-my-server.pem" ec2-user@ec2-44-222-201-100.compute-1.amazonaws.com'
 }
 
 def copyJarToEc2() {
