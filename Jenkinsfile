@@ -1,52 +1,50 @@
+/* groovylint-disable CompileStatic */
 pipeline {
     agent any
 
     tools {
-    maven 'maven-3.9.9'
-  }
-
+        maven 'maven-3.9.9'
+    }
 
     stages {
-        stage("init"){
+        stage('init'){
             steps {
                 script {
-                    gv = load "scripts.groovy"
+                    gv = load 'scripts.groovy'
                 }
             }
         }
 
-        stage("Building microservice") {
+        stage('Building microservice') {
             steps {
                 script {
-                    gv.buildUsersMicroservice();
+                    gv.buildUsersMicroservice()
                 }
             }
         }
 
-        stage("Connecting to Server") {
+        stage('Connecting to Server') {
             steps {
                 script {
-                    gv.connectToEc2();
+                    gv.connectToEc2()
                 }
             }
         }
 
-        stage("Copying files to Server") {
+        stage('Copying files to Server') {
             steps {
                 script {
-                    gv.copyJarToEc2();
+                    gv.copyJarToEc2()
                 }
             }
         }
 
-        stage("Running microservice...") {
+        stage('Running microservice...') {
             steps {
                 script {
-                    gv.runUsersMicroService();
+                    gv.runUsersMicroService()
                 }
             }
         }
     }
-
-    
 }
