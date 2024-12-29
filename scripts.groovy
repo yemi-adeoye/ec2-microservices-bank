@@ -1,11 +1,13 @@
 /* groovylint-disable CompileStatic, FactoryMethodName, MethodReturnTypeRequired, NoDef */
 def buildUsersMicroservice() {
     echo 'Building users microservice'
-    sh 'mvn clean package'
+    // sh 'mvn clean package'
 }
 
 def connectToEc2() {
-    echo 'Connecting to EC@'
+    echo 'Connecting to EC2'
+    sh 'chmod 400 "/var/jenkins_home/workspace/kp-my-server.pem"'
+    sh 'ssh -i "kp-my-server.pem" ec2-user@ec2-44-222-201-100.compute-1.amazonaws.com'
 }
 
 def copyJarToEc2() {
