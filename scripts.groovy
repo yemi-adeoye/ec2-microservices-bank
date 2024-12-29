@@ -1,7 +1,7 @@
 /* groovylint-disable CompileStatic, FactoryMethodName, MethodReturnTypeRequired, NoDef */
 def buildUsersMicroservice() {
     echo 'Building users microservice'
-// sh 'mvn clean package'
+    sh 'mvn clean package -DskipTests'
 }
 
 def connectToEc2() {
