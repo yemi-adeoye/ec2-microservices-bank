@@ -1,4 +1,4 @@
-/* groovylint-disable CompileStatic */
+/* groovylint-disable CompileStatic, NestedBlockDepth */
 pipeline {
     agent any
 
@@ -26,8 +26,10 @@ pipeline {
         stage('Connecting to Server') {
             steps {
                 script {
-                    withCredentials([sshUserPrivateKey(credentialsId: "2", keyFileVariable: 'keyfile')]) {
-                    gv.connectToEc2()
+                    withCredentials([sshUserPrivateKey(credentialsId: '2', keyFileVariable: 'keyfile')]) {
+                        USER = 'ec2-user'
+                        HOST = 'ec2-3-88-248-51.compute-1.amazonaws.com'
+                        gv.connectToEc2()
                     }
                 }
             }
