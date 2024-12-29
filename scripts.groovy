@@ -12,7 +12,8 @@ def connectToEc2() {
         sh '''
             ec2-user@ec2-3-88-248-51.compute-1.amazonaws.com <<'ENDSSH'
             cd ~ && java -jar banks-ms-0.0.1-SNAPSHOT.jar
-        ENDSSH'''
+ENDSSH'
+        '''
     }  
 }
 
