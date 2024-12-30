@@ -27,17 +27,8 @@ pipeline {
             steps {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2-kp', keyFileVariable: 'keyfile')]) {
-                        
-                        gv.connectToEc2()
+                        gv.copyJarToEC2()
                     }
-                }
-            }
-        }
-
-        stage('Copying files to Server') {
-            steps {
-                script {
-                    gv.copyJarToEc2()
                 }
             }
         }
@@ -45,7 +36,9 @@ pipeline {
         stage('Running microservice...') {
             steps {
                 script {
-                    gv.runUsersMicroService()
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ec2-kp', keyFileVariable: 'keyfile')]) {
+                        gv.runUsersMicroService()
+                    }
                 }
             }
         }
