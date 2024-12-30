@@ -7,7 +7,7 @@ def buildUsersMicroservice() {
 
 def copyJarToEC2() {
     echo 'Connecting to EC2'
-    sh '''scp -i ${keyfile} -o StrictHostKeyChecking=no ./target/banks-ms-0.0.1-SNAPSHOT.jar ${USER}@${HOST}:~/banks-ms/'''
+    sh '''scp -i ${keyfile} -o StrictHostKeyChecking=no ./target/banks-ms-0.0.1-SNAPSHOT.jar ${USER}@${HOST}:~/banks-ms/bank-ms.jar'''
 }
 
 def runUsersMicroService() {
