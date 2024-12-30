@@ -26,7 +26,7 @@ pipeline {
         stage('Connecting to Server') {
             steps {
                 script {
-                    withCredentials([sshUserPrivateKey(credentialsId: '2', keyFileVariable: 'keyfile')]) {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ec2-kp', keyFileVariable: 'keyfile')]) {
                         
                         gv.connectToEc2()
                     }
