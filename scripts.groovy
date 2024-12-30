@@ -5,11 +5,8 @@ def buildUsersMicroservice() {
 }
 
 def connectToEc2() {
-    sshagent(['ec2-kp']) {
         echo 'Connecting to EC2'
         sh 'scp -i ${keyfile} -o StrictHostKeyChecking=no ./target/banks-ms-0.0.1-SNAPSHOT.jar ec2-user@ec2-52-90-34-240.compute-1.amazonaws.com:~'
-        sh 'ssh -i ${keyfile} ${USER}@${HOST} "java -jar banks-ms-0.0.1-SNAPSHOT.jar"'
-    }
 }
 
 def copyJarToEc2() {
