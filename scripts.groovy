@@ -12,7 +12,7 @@ def copyJarToEC2() {
 
 def runUsersMicroService() {
     echo 'Running users microservice'
-    sh '''ssh -i ${keyfile} -o StrictHostKeyChecking=no ${USER}@${HOST} 'cd bank-ms && java -jar /banks-ms/banks-ms.jar' '''
+    sh '''ssh -i ${keyfile} -o StrictHostKeyChecking=no ${USER}@${HOST} 'cd banks-ms && java -jar /banks-ms/banks-ms.jar' '''
 }
 
 return this
