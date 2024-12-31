@@ -7,12 +7,12 @@ def buildUsersMicroservice() {
 
 def copyJarToEC2() {
     echo 'Connecting to EC2'
-    sh '''scp -i ${keyfile} -o StrictHostKeyChecking=no ./target/banks-ms-0.0.1-SNAPSHOT.jar ${USER}@${HOST}:~/banks-ms/banks-ms.jar'''
+    sh '''scp -i ${keyfile} -o StrictHostKeyChecking=no ./target/banks-ms-0.0.1-SNAPSHOT.jar ${USER}@${HOST}:~/${BANK_MS_DIR}/${BANK_MS_FILE}'''
 }
 
 def runUsersMicroService() {
     echo 'Running users microservice'
-    sh '''ssh -i ${keyfile} -o StrictHostKeyChecking=no ${USER}@${HOST} 'java -jar /banks-ms/banks-ms.jar' '''
+    sh '''ssh -i ${keyfile} -o StrictHostKeyChecking=no ${USER}@${HOST} 'java -jar /${BANK_MS_DIR}/${BANK_MS_FILE}' '''
 }
 
 return this
