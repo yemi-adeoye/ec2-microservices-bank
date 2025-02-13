@@ -19,6 +19,14 @@ pipeline {
             }
         }
 
+        stage('Building microservice') {
+            steps {
+                script {
+                    gv.buildUsersMicroservice()
+                }
+            }
+        }
+
         stage('Connecting to Server') {
             steps {
                 script {
