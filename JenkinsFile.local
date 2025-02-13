@@ -6,9 +6,9 @@ pipeline {
         maven 'maven-3.9.9'
     }
 
-    environment {
-        EC2_PASSWORD = credentials('LOCAL_EC2_PASSWORD')
-    }
+    // environment {
+    //     EC2_PASSWORD = credentials('LOCAL_EC2_PASSWORD')
+    // }
 
     stages {
         stage('init'){
@@ -19,9 +19,13 @@ pipeline {
             }
         }
 
-        stage('verifyCredentials'){
+        stage('Connecting to Server') {
             steps {
-                sh "echo ${env.EC2_PASSWORD}"
+                script {
+                    withCredentials([string(credentialsId: 'LOCAL_EC2_PASSWORD', variable: 'LOCAL_EC2_PASSWORD')]) {
+                        gv.copyJarToEC2()
+                    }
+                }
             }
         }
 
