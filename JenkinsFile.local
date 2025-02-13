@@ -37,6 +37,16 @@ pipeline {
             }
         }
 
+        stage('Running microservice...') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'LOCAL_EC2_PASSWORD', variable: 'LOCAL_EC2_PASSWORD')]) {
+                        gv.runUsersMicroService()
+                    }
+                }
+            }
+        }
+
         // stage('Building microservice') {
         //     steps {
         //         script {
