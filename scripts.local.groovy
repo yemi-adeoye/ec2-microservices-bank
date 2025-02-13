@@ -12,7 +12,7 @@ def copyJarToEC2() {
 
 def runUsersMicroService() {
     echo 'Running users microservice'
-    sh '''nohup sshpass -p ${LOCAL_EC2_PASSWORD} ${USER}@${BANK_MS_LOCALHOST} " java -jar /home/ec2-user/${BANK_MS_DIR}${BANK_MS_FILE} " &'''
+    sh '''nohup sshpass -p ${LOCAL_EC2_PASSWORD} ssh ${USER}@${BANK_MS_LOCALHOST} " java -jar /home/ec2-user/${BANK_MS_DIR}${BANK_MS_FILE} " &'''
 }
 
 return this
