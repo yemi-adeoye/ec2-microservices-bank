@@ -7,7 +7,7 @@ def buildUsersMicroservice() {
 
 def copyJarToEC2() {
     echo 'Copying Jar to EC2 Mock'
-    sh '''sshpass -p ${LOCAL_EC2_PASSWORD} scp ./target/banks-ms-0.0.1-SNAPSHOT.jar ${USER}@${BANK_MS_LOCALHOST}:/home/ec2-user/${BANK_MS_DIR}/${BANK_MS_FILE}'''
+    sh '''sshpass -p ${LOCAL_EC2_PASSWORD} scp -o StrictHostKeyChecking=no ./target/banks-ms-0.0.1-SNAPSHOT.jar ${USER}@${BANK_MS_LOCALHOST}:/home/ec2-user/${BANK_MS_DIR}/${BANK_MS_FILE}'''
 }
 
 def runUsersMicroService() {
