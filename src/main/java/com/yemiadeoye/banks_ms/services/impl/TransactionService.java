@@ -2,6 +2,7 @@ package com.yemiadeoye.banks_ms.services.impl;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yemiadeoye.banks_ms.dtos.TransactionRequestDto;
 import com.yemiadeoye.banks_ms.dtos.TransactionResponseDto;
 import com.yemiadeoye.banks_ms.entities.AccountsEntity;
@@ -128,49 +131,8 @@ public class TransactionService implements ITransactionService {
             }
 
             case INTRABANK_TRANSFER -> {
-                beneficiaryAccount.setAccountBalance(previousBalance.add(redisTransactionEntity.getAmount()));
-                BigDecimal initatorPreviousBalance = initiatorAccount.getAccountBalance();
-
-                initiatorAccount
-                        .setAccountBalance(initatorPreviousBalance.subtract(redisTransactionEntity.getAmount()));
-
-                TransactionsEntity transactionDeposit = conversionService.convert(
-                        redisTransactionEntity,
-                        TransactionsEntity.class);
-
-                TransactionsEntity transactionWithdrawal = conversionService.convert(
-                        redisTransactionEntity,
-                        TransactionsEntity.class);
-
-                transactionWithdrawal.setBeneficiary(redisTransactionEntity.getInitiator());
-                transactionWithdrawal.setBeneficiaryAccount(redisTransactionEntity.getInitiatorAccount());
-                transactionWithdrawal.setTransactionType(TransactionType.WITHDRAWAL.toString());
-
-                transactionDeposit.setBeneficiary(redisTransactionEntity.getBeneficiary());
-                transactionDeposit.setTransactionType(TransactionType.DEPOSIT.toString());
-
-                try {
-                    accountRepository.saveAll(List.of(beneficiaryAccount, initiatorAccount));
-
-                    transactionWithdrawal.setTransactionStatus(TransactionState.COMPLETED.toString());
-                    transactionWithdrawal.setCompletedAt(new Timestamp(System.currentTimeMillis()));
-                    transactionWithdrawal.setNotes("WITHDRAWAL OK");
-
-                    transactionDeposit.setTransactionStatus(TransactionState.COMPLETED.toString());
-                    transactionDeposit.setCompletedAt(new Timestamp(System.currentTimeMillis()));
-                    transactionDeposit.setNotes("DEPOSIT OK");
-
-                } catch (Exception e) {
-                    transactionWithdrawal.setTransactionStatus(TransactionState.FAILED.toString());
-                    transactionWithdrawal.setCompletedAt(new Timestamp(System.currentTimeMillis()));
-                    transactionWithdrawal.setNotes("WITHDRAWAL FAILED");
-
-                    transactionDeposit.setTransactionStatus(TransactionState.FAILED.toString());
-                    transactionDeposit.setCompletedAt(new Timestamp(System.currentTimeMillis()));
-                    transactionDeposit.setNotes("DEPOSIT FAILED");
-                }
-
-                transactionRepository.saveAll(List.of(transactionDeposit, transactionWithdrawal));
+                processTransferTransaction(beneficiaryAccount, previousBalance, redisTransactionEntity,
+                        initiatorAccount);
 
             }
 
@@ -188,13 +150,21 @@ public class TransactionService implements ITransactionService {
             var notification = NotificationEntity.builder()
                     .userId(transaction.getBeneficiary())
                     .isRead(false)
+                    .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                     .message(message)
                     .build();
 
-            notificationService.saveNotification(notification);
+            var notificationDb = notificationService.saveNotification(notification);
 
-            notificationService.sendNotification("notifications",
-                    message);
+            System.out.println("yoyoyoy" + notificationDb);
+
+            try {
+                notificationService.sendNotification("notifications",
+                        new ObjectMapper().writeValueAsString(notificationDb));
+            } catch (JsonProcessingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
         });
 
@@ -241,8 +211,55 @@ public class TransactionService implements ITransactionService {
 
     }
 
-    private void processTransaferTransaction() {
+    private void processTransferTransaction(AccountsEntity beneficiaryAccount,
+            BigDecimal previousBalance, RedisTransactionEntity redisTransactionEntity,
+            AccountsEntity initiatorAccount) {
 
+        beneficiaryAccount.setAccountBalance(previousBalance.add(redisTransactionEntity.getAmount()));
+        BigDecimal initatorPreviousBalance = initiatorAccount.getAccountBalance();
+
+        initiatorAccount
+                .setAccountBalance(initatorPreviousBalance.subtract(redisTransactionEntity.getAmount()));
+
+        TransactionsEntity transactionDeposit = conversionService.convert(
+                redisTransactionEntity,
+                TransactionsEntity.class);
+
+        TransactionsEntity transactionWithdrawal = conversionService.convert(
+                redisTransactionEntity,
+                TransactionsEntity.class);
+
+        transactionWithdrawal.setBeneficiary(redisTransactionEntity.getInitiator());
+        transactionWithdrawal.setBeneficiaryAccount(redisTransactionEntity.getInitiatorAccount());
+        transactionWithdrawal.setTransactionType(TransactionType.WITHDRAWAL.toString());
+
+        transactionDeposit.setBeneficiary(redisTransactionEntity.getBeneficiary());
+        transactionDeposit.setTransactionType(TransactionType.DEPOSIT.toString());
+
+        try {
+            accountRepository.saveAll(List.of(beneficiaryAccount, initiatorAccount));
+
+            transactionWithdrawal.setTransactionStatus(TransactionState.COMPLETED.toString());
+            transactionWithdrawal.setCompletedAt(new Timestamp(System.currentTimeMillis()));
+            transactionWithdrawal.setNotes("WITHDRAWAL OK");
+
+            transactionDeposit.setTransactionStatus(TransactionState.COMPLETED.toString());
+            transactionDeposit.setCompletedAt(new Timestamp(System.currentTimeMillis()));
+            transactionDeposit.setNotes("DEPOSIT OK");
+
+        } catch (Exception e) {
+            transactionWithdrawal.setTransactionStatus(TransactionState.FAILED.toString());
+            transactionWithdrawal.setCompletedAt(new Timestamp(System.currentTimeMillis()));
+            transactionWithdrawal.setNotes("WITHDRAWAL FAILED");
+
+            transactionDeposit.setTransactionStatus(TransactionState.FAILED.toString());
+            transactionDeposit.setCompletedAt(new Timestamp(System.currentTimeMillis()));
+            transactionDeposit.setNotes("DEPOSIT FAILED");
+        }
+
+        var transactionsDb = transactionRepository.saveAll(List.of(transactionDeposit, transactionWithdrawal));
+
+        createAndSendNotification(transactionsDb);
     }
 
     @Override

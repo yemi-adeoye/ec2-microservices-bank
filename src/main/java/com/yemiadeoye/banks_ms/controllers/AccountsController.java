@@ -34,7 +34,7 @@ public class AccountsController {
     @GetMapping(value = "/{accountId}", produces = "application/json")
     public ResponseEntity<AccountResponseDto> getAccount(@PathVariable String accountId)
             throws AccountNotFoundException {
-        return ResponseEntity.ok(accountService.getAccount(accountId));
+        return ResponseEntity.status(HttpStatus.OK).body(accountService.getAccount(accountId));
     }
 
     @GetMapping(value = "/user/{userId}", produces = "application/json")

@@ -9,5 +9,5 @@ import com.yemiadeoye.banks_ms.entities.NotificationEntity;
 
 @Repository
 public interface INotificationRepository extends CrudRepository<NotificationEntity, String> {
-    List<NotificationEntity> findByUserId(String UserId);
+    List<NotificationEntity> findByUserIdAndIsRead(String UserId, boolean isRead);
 }

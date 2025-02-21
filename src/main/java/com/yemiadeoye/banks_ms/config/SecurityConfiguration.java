@@ -15,7 +15,7 @@ public class SecurityConfiguration {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.oauth2ResourceServer(customizer -> customizer.jwt(jwtCustomizer -> jwtCustomizer.jwkSetUri(keySetUri)));
         http.csrf(csrfCustomizer -> csrfCustomizer.disable());
-        http.authorizeHttpRequests(authCustomizer -> authCustomizer.anyRequest().permitAll());
+        http.authorizeHttpRequests(authCustomizer -> authCustomizer.anyRequest().authenticated());
 
         return http.build();
     }

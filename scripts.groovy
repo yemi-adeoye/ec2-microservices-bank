@@ -1,7 +1,7 @@
 /* groovylint-disable CompileStatic, FactoryMethodName, MethodReturnTypeRequired, NoDef */
 
 def buildUsersMicroservice() {
-    echo 'Building users microservice'
+    echo 'Building bank microservice'
     sh 'mvn clean package -DskipTests'
 }
 
@@ -11,7 +11,7 @@ def copyJarToEC2() {
 }
 
 def runUsersMicroService() {
-    echo 'Running users microservice'
+    echo 'Running bank microservice'
     sh '''nohup ssh -i ${keyfile} -o StrictHostKeyChecking=no ${USER}@${HOST} "cd ${BANK_MS_DIR} &&  java -jar ${BANK_MS_FILE} " &'''
 }
 

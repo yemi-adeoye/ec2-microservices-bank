@@ -1,5 +1,9 @@
 package com.yemiadeoye.banks_ms.entities;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 import org.springframework.stereotype.Component;
@@ -31,4 +35,7 @@ public class NotificationEntity {
     @Indexed
     private boolean isRead;
     private String message;
+
+    @Indexed
+    private Date createdAt;
 }

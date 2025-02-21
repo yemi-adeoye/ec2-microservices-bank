@@ -31,7 +31,7 @@ public class NotificationService implements INotificationService {
     @Override
     public List<NotificationEntity> getUserNotifications(String userId) {
 
-        return notificationRepository.findByUserId(userId);
+        return notificationRepository.findByUserIdAndIsRead(userId, false);
     }
 
     public NotificationEntity saveNotification(NotificationEntity notificationEntity) {
@@ -59,7 +59,7 @@ public class NotificationService implements INotificationService {
         sb.append(transactionsEntity.getAmount());
         sb.append(description);
         sb.append("Account: " + transactionsEntity.getBeneficiaryAccount());
-        sb.append("Transaction Status: " + transactionsEntity.getTransactionStatus());
+        sb.append(" Transaction Status: " + transactionsEntity.getTransactionStatus());
 
         notificationMap.put("for", "yemi");
         notificationMap.put("notification", sb.toString());
