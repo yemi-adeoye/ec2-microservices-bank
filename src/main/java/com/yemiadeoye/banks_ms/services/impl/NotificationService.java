@@ -61,7 +61,7 @@ public class NotificationService implements INotificationService {
         sb.append("Account: " + transactionsEntity.getBeneficiaryAccount());
         sb.append(" Transaction Status: " + transactionsEntity.getTransactionStatus());
 
-        notificationMap.put("for", "yemi");
+        notificationMap.put("for", transactionsEntity.getBeneficiary());
         notificationMap.put("notification", sb.toString());
 
         String message = "";

@@ -17,7 +17,8 @@ public class AccountsEntityToAccountsResponseDtoConverter implements Converter<A
                 accountEntity.getAccountBalance(),
                 accountEntity.getEffectiveAccountBalance(),
                 accountEntity.getAccountNumber(),
-                accountEntity.getAccountType());
+                accountEntity.getAccountType(),
+                accountEntity.getCreatedAt());
     }
 
 }
