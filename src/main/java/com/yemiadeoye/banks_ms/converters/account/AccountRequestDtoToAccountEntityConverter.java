@@ -15,7 +15,7 @@ public class AccountRequestDtoToAccountEntityConverter implements Converter<Acco
     public AccountsEntity convert(AccountRequestDto accountRequestDto) {
         AccountsEntity account = new AccountsEntity();
         account.setUserId(accountRequestDto.userId());
-        account.setAccountBalance(new BigDecimal(0L));
+        account.setAccountBalance(new BigDecimal(1000000L));
         account.setEffectiveAccountBalance(new BigDecimal(1000000L));
         account.setCreatedBy(accountRequestDto.createdBy());
         account.setAccountType(accountRequestDto.accountType());
